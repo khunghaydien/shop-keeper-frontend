@@ -4,11 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import ListIcon from "@/icons/list-icon";
-import PageIcon from "@/icons/page-icon";
-import TableIcon from "@/icons/table-icon";
-import ChevronDownIcon from "@/icons/chevron-down-icon";
-import UserCircleIcon from "@/icons/user-circle-icon";
+import { List, FileText, Table, ChevronDown, UserCircle } from "lucide-react";
+import { ROUTER } from "@/consts/router";
 
 type NavItem = {
   name: string;
@@ -19,24 +16,24 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <UserCircleIcon />,
-    name: "Merchants",
-    path: "/merchants",
+    icon: <UserCircle />,
+    name: "Users",
+    path: ROUTER.USER.LIST,
   },
   {
-    icon: <ListIcon />,
-    name: "Accounts",
-    path: "/accounts",
+    icon: <List />,
+    name: "Bots",
+    path: ROUTER.BOT.LIST,
   },
   {
-    icon: <PageIcon />,
-    name: "Supported Pages",
-    path: "/supported-pages",
+    icon: <FileText />,
+    name: "Pages",
+    path: ROUTER.PAGE.LIST,
   },
   {
-    icon: <TableIcon />,
-    name: "Supported Products",
-    path: "/supported-products",
+    icon: <Table />,
+    name: "Products",
+    path: ROUTER.PRODUCT.LIST,
   },
 ];
 
@@ -75,7 +72,7 @@ const AppSidebar: React.FC = () => {
                 <span className={`menu-item-text`}>{nav.name}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
-                <ChevronDownIcon
+                <ChevronDown
                   className={`ml-auto w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType &&
                     openSubmenu?.index === index
                     ? "rotate-180 text-brand-500"
@@ -240,30 +237,21 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex  ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-          }`}
+        className={`py-8 flex justify-center`}
       >
         <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <Image
-                className="dark:hidden"
                 src="/images/logo/logo.svg"
                 alt="Logo"
                 width={150}
                 height={40}
               />
-              <Image
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
             </>
-          ) : (
+          ) : ( 
             <Image
-              src="/images/logo/logo-icon.svg"
+              src="/images/logo/logo.svg"
               alt="Logo"
               width={32}
               height={32}

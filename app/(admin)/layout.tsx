@@ -21,19 +21,21 @@ export default function AdminLayout({
     ? "lg:ml-[290px]"
     : "lg:ml-[90px]";
 
+  const maxWidth = isExpanded || isHovered ? "lg:max-w-[calc(100%-290px)]" : "lg:max-w-[calc(100%-90px)]";
+
   return (
-    <div className="min-h-screen xl:flex">
-      {/* Sidebar and Backdrop */}
+    <div className="min-h-screen xl:flex relative">
       <AppSidebar />
       <Backdrop />
-      {/* Main Content Area */}
       <div
-        className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
+        className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin} ${maxWidth}`}
       >
-        {/* Header */}
         <AppHeader />
-        {/* Page Content */}
-        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+        <div className="p-4 mx-auto w-full md:p-6">
+          <div className="max-w-full overflow-hidden">
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,3 +8,7 @@ export const formatDate = (datetime: string) => {
         second: "2-digit",
     }).format(new Date(datetime));
 };
+
+export const formatDateToLocale = (datetime: string) => {
+    return new Date(datetime).toLocaleDateString();
+};
