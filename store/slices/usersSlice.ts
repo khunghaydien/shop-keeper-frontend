@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { fetchUsers, User } from '@/services/user-services';
+import { fetchUsers, createUser, updateUser, deleteUser, User, CreateUserData, UpdateUserData } from '@/services/user-services';
 
 interface UsersState {
   data: User[];
@@ -25,6 +25,30 @@ export const fetchUsersAsync = createAsyncThunk<User[]>(
   }
 );
 
+export const createUserAsync = createAsyncThunk<User, CreateUserData>(
+  'users/createUser',
+  async (userData) => {
+    const response = await createUser(userData);
+    return response;
+  }
+);
+
+export const updateUserAsync = createAsyncThunk<User, UpdateUserData>(
+  'users/updateUser',
+  async (userData) => {
+    const response = await updateUser(userData);
+    return response;
+  }
+);
+
+export const deleteUserAsync = createAsyncThunk<string, string>(
+  'users/deleteUser',
+  async (userId) => {
+    await deleteUser(userId);
+    return userId;
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -36,9 +60,9 @@ const usersSlice = createSlice({
         state.filteredData = state.data;
       } else {
         state.filteredData = state.data.filter(user =>
-          user.name.toLowerCase().includes(action.payload.toLowerCase()) ||
-          user.email.toLowerCase().includes(action.payload.toLowerCase()) ||
-          user.phone.toLowerCase().includes(action.payload.toLowerCase())
+          user.name?.toLowerCase().includes(action.payload.toLowerCase()) ||
+          user.email?.toLowerCase().includes(action.payload.toLowerCase()) ||
+          user.phone?.toLowerCase().includes(action.payload.toLowerCase())
         );
       }
     },
@@ -49,6 +73,7 @@ const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch users
       .addCase(fetchUsersAsync.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -61,6 +86,24 @@ const usersSlice = createSlice({
       .addCase(fetchUsersAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Failed to fetch users';
+      })
+      // Create user
+      .addCase(createUserAsync.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+        state.filteredData = state.data;
+      })
+      // Update user
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        const index = state.data.findIndex(user => user.id === action.payload.id);
+        if (index !== -1) {
+          state.data[index] = action.payload;
+          state.filteredData = state.data;
+        }
+      })
+      // Delete user
+      .addCase(deleteUserAsync.fulfilled, (state, action) => {
+        state.data = state.data.filter(user => user.id !== action.payload);
+        state.filteredData = state.data;
       });
   },
 });

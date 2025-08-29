@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BasicTableOne from "@/components/tables/BasicTableOne";
 import SearchInput from "@/components/common/SearchInput";
@@ -9,11 +9,18 @@ import Button from "@/components/ui/button/Button";
 import { formatDateToLocale } from "@/ultils/format-date";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUsersAsync, setSearchTerm } from "@/store/slices/usersSlice";
+import { User } from "@/services/user-services";
+import { useModalContext } from "@/context/ModalContext";
+import CreateUser from "@/components/admin/users/CreateUser";
+import UpdateUser from "@/components/admin/users/UpdateUser";
+import DeleteUser from "@/components/admin/users/DeleteUser";
 
 export default function UsersPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { filteredData: users, isLoading, error, searchTerm } = useAppSelector((state) => state.users);
+  const { openModal } = useModalContext();
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
     dispatch(fetchUsersAsync());
@@ -25,44 +32,44 @@ export default function UsersPage() {
     router.push(`/users/${userId}`);
   };
 
-  const handleEdit = (userId: string) => {
-    console.log('Edit user:', userId);
-    // TODO: Implement edit user functionality
+  const handleEdit = (user: User) => {
+    setSelectedUser(user);
+    openModal(<UpdateUser user={user} onSuccess={() => dispatch(fetchUsersAsync())} />);
   };
 
-  const handleDelete = (userId: string) => {
-    console.log('Delete user:', userId);
-    // TODO: Implement delete user functionality
+  const handleDelete = (user: User) => {
+    setSelectedUser(user);
+    openModal(<DeleteUser user={user} onSuccess={() => dispatch(fetchUsersAsync())} />);
   };
 
   const handleCreate = () => {
-    console.log('Create new user');
-    // TODO: Implement create user functionality
+    setSelectedUser(null);
+    openModal(<CreateUser onSuccess={() => dispatch(fetchUsersAsync())} />);
   };
 
   const columns = [
-    { header: "ID", accessor: "id" },
-    { header: "Name", accessor: "name" },
-    { header: "Phone", accessor: "phone" },
-    { header: "Email", accessor: "email" },
-    { header: "Caprover Instance", accessor: "caprover_instance" },
-    { header: "N8N Instance", accessor: "n8n_instance" },
-    { header: "Role", accessor: "role" },
+    { header: "ID", accessor: "id" as keyof User },
+    { header: "Name", accessor: "name" as keyof User },
+    { header: "Phone", accessor: "phone" as keyof User },
+    { header: "Email", accessor: "email" as keyof User },
+    { header: "Caprover Instance", accessor: "caprover_instance" as keyof User },
+    { header: "N8N Instance", accessor: "n8n_instance" as keyof User },
+    { header: "Role", accessor: "role" as keyof User },
     {
       header: "Status",
-      accessor: "status",
+      accessor: "status" as keyof User,
       render: (value: string) => <StatusChip status={value} />
     },
-    { header: "Created At", accessor: "created_at", render: (value: string) => formatDateToLocale(value) },
-    { header: "Updated At", accessor: "updated_at", render: (value: string) => formatDateToLocale(value) },
+    { header: "Created At", accessor: "created_at" as keyof User, render: (value: string) => formatDateToLocale(value) },
+    { header: "Updated At", accessor: "updated_at" as keyof User, render: (value: string) => formatDateToLocale(value) },
     {
       header: "Action",
-      accessor: "id",
-      render: (value: string) => (
+      accessor: "id" as keyof User,
+      render: (value: string, row: User) => (
         <ActionButtons
           onView={() => handleView(value)}
-          onEdit={() => handleEdit(value)}
-          onDelete={() => handleDelete(value)}
+          onEdit={() => handleEdit(row)}
+          onDelete={() => handleDelete(row)}
         />
       )
     },

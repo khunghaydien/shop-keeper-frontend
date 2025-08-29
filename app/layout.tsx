@@ -3,6 +3,7 @@ import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { ModalProvider } from '@/context/ModalContext';
 import ReduxProvider from '@/providers/redux-provider';
 
 const outfit = Outfit({
@@ -27,7 +28,9 @@ export default function RootLayout({
         <ReduxProvider>
           <ThemeProvider>
             <SidebarProvider>
+              <ModalProvider>
                 {children}
+              </ModalProvider>
             </SidebarProvider>
           </ThemeProvider>
         </ReduxProvider>

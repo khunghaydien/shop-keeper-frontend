@@ -5,12 +5,15 @@ import InfoCard from "@/components/common/InfoCard";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUsersAsync } from "@/store/slices/usersSlice";
 import { User } from '@/services/user-services';
+import { useModalContext } from '@/context/ModalContext';
+import UpdateUser from '@/components/admin/users/UpdateUser';
 
 export default function UserDetailPage() {
   const params = useParams();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: users, isLoading } = useAppSelector((state) => state.users);
+  const { openModal } = useModalContext();
   const [user, setUser] = useState<User | null>(null);
 
   const userId = params.id as string;
@@ -27,8 +30,9 @@ export default function UserDetailPage() {
   }, [users, userId]);
 
   const handleEdit = () => {
-    // TODO: Implement edit functionality
-    console.log('Edit user:', userId);
+    if (user) {
+      openModal(<UpdateUser user={user} onSuccess={() => dispatch(fetchUsersAsync())} />);
+    }
   };
 
   return (
