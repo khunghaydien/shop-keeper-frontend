@@ -1,0 +1,30 @@
+{
+  "auth": {
+    "signIn": "Đăng Nhập",
+    "signUp": "Đăng Ký",
+    "email": "Email",
+    "password": "Mật Khẩu",
+    "name": "Họ và Tên",
+    "phone": "Số Điện Thoại",
+    "signInWith": "Đăng nhập với {provider}",
+    "signUpWith": "Đăng ký với {provider}",
+    "enterEmail": "Nhập email của bạn",
+    "enterPassword": "Nhập mật khẩu của bạn",
+    "enterName": "Nhập họ và tên của bạn",
+    "enterPhone": "Nhập số điện thoại của bạn",
+    "keepMeLoggedIn": "Duy trì đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "dontHaveAccount": "Chưa có tài khoản?",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "backToDashboard": "Quay lại dashboard",
+    "signInDescription": "Nhập email và mật khẩu để đăng nhập!",
+    "signUpDescription": "Nhập email và mật khẩu để đăng ký!",
+    "termsAndConditions": "Bằng việc tạo tài khoản có nghĩa là bạn đồng ý với Điều khoản và Điều kiện, và Chính sách Bảo mật của chúng tôi",
+    "or": "Hoặc"
+  },
+  "common": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "required": "*"
+  }
+}

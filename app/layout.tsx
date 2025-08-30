@@ -5,6 +5,8 @@ import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ModalProvider } from '@/context/ModalContext';
 import ReduxProvider from '@/providers/redux-provider';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -17,19 +19,23 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const messages = await getMessages();
+  const locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <ReduxProvider>
           <ThemeProvider>
             <SidebarProvider>
               <ModalProvider>
-                {children}
+                <NextIntlClientProvider messages={messages}>
+                  {children}
+                </NextIntlClientProvider>
               </ModalProvider>
             </SidebarProvider>
           </ThemeProvider>
